@@ -26,28 +26,50 @@
     padding: 8px 16px 4px 16px;
     margin: 0;
   }
-  .ticker-wrap {
-    padding: 4px 12px 8px 12px;
+  .ticker-wpc {
+    padding: 2px 12px 6px 12px;
+    font-size: 13px;
   }
-  /* Personalización de los indicadores de Wilkinsonpc a colores APG */
-  #widget_ticker1, #dolar_wpc_ticker {
-    color: #FFFFFF !important;
-    font-size: 14px !important;
-  }
-  #widget_ticker1 a, #dolar_wpc_ticker a {
-    color: #EFC873 !important;
-    text-decoration: none !important;
+  #dolar_wpc_ticker a { color: #EFC873 !important; text-decoration: none !important; }
+  .tv-zone {
+    background: #6E101A;
   }
 </style>
 </head>
 <body>
   <div class="barra-apg">
     <p class="titulo-apg">Indicadores del mercado</p>
-    <div class="ticker-wrap">
+    <div class="ticker-wpc">
       <div id="dolar_wpc_ticker">
         <a href="https://dolar.wilkinsonpc.com.co/" target="_new">Indicadores Colombia</a>
       </div>
       <script type="text/javascript" src="https://widgets.wilkinsonpc.com.co/misc/misc-tickers1.js"></script>
+    </div>
+  </div>
+
+  <!-- TradingView Ticker Tape (animado) -->
+  <div class="tv-zone">
+    <div class="tradingview-widget-container">
+      <div class="tradingview-widget-container__widget"></div>
+      <script type="text/javascript" src="https://s3.tradingview.com/external-embedding/embed-widget-ticker-tape.js" async>
+      {
+        "symbols": [
+          { "description": "Dólar", "proName": "FX_IDC:USDCOP" },
+          { "description": "Brent", "proName": "TVC:UKOIL" },
+          { "description": "WTI", "proName": "TVC:USOIL" },
+          { "description": "Oro", "proName": "TVC:GOLD" },
+          { "description": "Café", "proName": "ICEUS:KC1!" },
+          { "description": "Aceite de Palma", "proName": "MYX:FUPO1!" },
+          { "description": "Euro", "proName": "FX_IDC:EURCOP" },
+          { "description": "S&P 500", "proName": "SP:SPX" }
+        ],
+        "showSymbolLogo": true,
+        "isTransparent": true,
+        "displayMode": "adaptive",
+        "colorTheme": "dark",
+        "locale": "es"
+      }
+      </script>
     </div>
   </div>
 </body>
