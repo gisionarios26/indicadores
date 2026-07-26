@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calendario Tributario APG</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Segoe UI', -apple-system, Arial, sans-serif;
+    background: transparent;
+    color: #2b2b2b;
+    padding: 8px;
+  }
+  .cal-wrap {
+    max-width: 100%;
+  }
+  .cal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .cal-title {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .cal-title .bar { width: 6px; height: 42px; background: #C6922A; border-radius: 3px; }
+  .cal-title h2 { font-size: 22px; color: #6E101A; font-weight: 700; line-height: 1.1; }
+  .cal-title span { font-size: 13px; color: #8a6a2a; font-weight: 500; }
+  .cal-year {
+    background: linear-gradient(135deg, #8C1C24, #6E101A);
+    color: #EFC873;
+    font-weight: 700;
+    font-size: 15px;
+    padding: 8px 18px;
+    border-radius: 30px;
+    letter-spacing: 1px;
+  }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 14px;
+  }
+  .card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 14px;
+    padding: 18px;
+    position: relative;
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease;
+    border-top: 4px solid #C6922A;
+  }
+  .card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 28px rgba(110,16,26,.14);
+  }
+  .card.destacada {
+    background: linear-gradient(135deg, #8C1C24, #6E101A);
+    border-top: 4px solid #EFC873;
+    color: #fff;
+  }
+  .card.destacada .tipo { color: #EFC873; }
+  .card.destacada .obl { color: #fff; }
+  .card.destacada .periodo { color: #e7cbb8; }
+  .card.destacada .fecha { color: #fff; }
+  .card.destacada .badge { background: #EFC873; color: #6E101A; }
+  .badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .5px;
+    padding: 3px 9px;
+    border-radius: 20px;
+    background: #F4E4C4;
+    color: #8a6a2a;
+    margin-bottom: 10px;
+  }
+  .tipo { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: .8px; color: #C6922A; }
+  .obl { font-size: 16px; font-weight: 700; color: #2b2b2b; margin: 4px 0 8px; line-height: 1.2; }
+  .periodo { font-size: 12px; color: #888; margin-bottom: 12px; }
+  .fecha {
+    font-size: 15px; font-weight: 700; color: #6E101A;
+    display: flex; align-items: center; gap: 6px;
+  }
+  .fecha svg { width: 16px; height: 16px; opacity: .8; }
+  .nota {
+    margin-top: 18px;
+    font-size: 12px;
+    color: #9a8a7a;
+    background: #faf6f0;
+    border-left: 3px solid #C6922A;
+    padding: 10px 14px;
+    border-radius: 6px;
+    line-height: 1.4;
+  }
+</style>
+</head>
+<body>
+<div class="cal-wrap">
+  <div class="cal-header">
+    <div class="cal-title">
+      <div class="bar"></div>
+      <div>
+        <h2>Calendario Tributario</h2>
+        <span>APG Capital Investments S.A.S. · NIT terminado en 4</span>
+      </div>
+    </div>
+    <div class="cal-year">2026</div>
+  </div>
+
+  <div class="cards" id="cards"></div>
+
+  <div class="nota">
+    ⚠️ Fechas de referencia basadas en el Decreto 2229 de 2023 (DIAN). Los vencimientos se determinan por el último dígito del NIT y pueden desplazarse por días festivos. <strong>Confirme siempre las fechas exactas con el área contable</strong> o en dian.gov.co antes de cada declaración.
+  </div>
+</div>
+
+<script>
+  // Obligaciones tipicas de APG (persona juridica, NIT digito 4)
+  // Fechas de referencia segun rangos del Decreto 2229/2023
+  const obligaciones = [
+    { tipo: "Mensual", obl: "Retención en la Fuente", periodo: "Formulario 350", dia: 15, badge: "Recurrente" },
+    { tipo: "Bimestral", obl: "IVA", periodo: "Formulario 300", dia: 15, badge: "Recurrente" },
+    { tipo: "Anual", obl: "Declaración de Renta", periodo: "Formulario 110 · Mayo", dia: 18, mes: "Mayo", badge: "Anual" },
+    { tipo: "Anual", obl: "Información Exógena", periodo: "Reporte de información", dia: 0, mes: "Según resolución", badge: "Anual" },
+  ];
+
+  const meses = ["enero","febrero","marzo","abril","mayo","junio","julio","agosto","septiembre","octubre","noviembre","diciembre"];
+  const hoy = new Date();
+  const mesActual = meses[hoy.getMonth()];
+  const mesSig = meses[(hoy.getMonth()+1)%12];
+
+  const svgCal = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>';
+
+  const cards = [
+    { destacada:true, tipo:"Próximo · Mensual", obl:"Retención en la Fuente", periodo:"Período: "+mesActual, fecha:"Vence en "+mesSig+" (día según NIT)", badge:"Más próximo" },
+    { tipo:"Bimestral", obl:"IVA", periodo:"Formulario 300", fecha:"Ene-Feb · Mar-Abr · May-Jun...", badge:"Recurrente" },
+    { tipo:"Anual", obl:"Declaración de Renta", periodo:"Año gravable 2025", fecha:"Mayo 2026 (según NIT)", badge:"Anual" },
+    { tipo:"Anual", obl:"Información Exógena", periodo:"Reporte tributario", fecha:"Según resolución DIAN", badge:"Anual" },
+    { tipo:"Semanal", obl:"GMF", periodo:"Gravamen Mov. Financieros", fecha:"2º día hábil semana siguiente", badge:"Si aplica" },
+    { tipo:"Regulatorio", obl:"Reporte Superfinanciera", periodo:"Entidad vigilada", fecha:"Según periodicidad", badge:"Vigilancia" },
+  ];
+
+  const cont = document.getElementById("cards");
+  cards.forEach(c => {
+    const div = document.createElement("div");
+    div.className = "card" + (c.destacada ? " destacada" : "");
+    div.innerHTML = `
+      <span class="badge">${c.badge}</span>
+      <div class="tipo">${c.tipo}</div>
+      <div class="obl">${c.obl}</div>
+      <div class="periodo">${c.periodo}</div>
+      <div class="fecha">${svgCal}${c.fecha}</div>
+    `;
+    cont.appendChild(div);
+  });
+</script>
+</body>
+</html>
