@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Indicadores APG Capital</title>
+<style>
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: transparent;
+    font-family: 'Segoe UI', Arial, sans-serif;
+    overflow: hidden;
+  }
+  .barra-apg {
+    background: linear-gradient(90deg, #6E101A 0%, #8C1C24 100%);
+    border-bottom: 3px solid #C6922A;
+    padding: 0;
+  }
+  .titulo-apg {
+    color: #EFC873;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    padding: 8px 16px 4px 16px;
+    margin: 0;
+  }
+  .ticker-wrap {
+    padding: 4px 12px 8px 12px;
+  }
+  /* Personalización de los indicadores de Wilkinsonpc a colores APG */
+  #widget_ticker1, #dolar_wpc_ticker {
+    color: #FFFFFF !important;
+    font-size: 14px !important;
+  }
+  #widget_ticker1 a, #dolar_wpc_ticker a {
+    color: #EFC873 !important;
+    text-decoration: none !important;
+  }
+</style>
+</head>
+<body>
+  <div class="barra-apg">
+    <p class="titulo-apg">Indicadores del mercado</p>
+    <div class="ticker-wrap">
+      <div id="dolar_wpc_ticker">
+        <a href="https://dolar.wilkinsonpc.com.co/" target="_new">Indicadores Colombia</a>
+      </div>
+      <script type="text/javascript" src="https://widgets.wilkinsonpc.com.co/misc/misc-tickers1.js"></script>
+    </div>
+  </div>
+</body>
+</html>
