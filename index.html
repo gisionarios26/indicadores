@@ -30,7 +30,10 @@
     padding: 2px 12px 6px 12px;
     font-size: 13px;
   }
-  #dolar_wpc_ticker a { color: #EFC873 !important; text-decoration: none !important; }
+  /* Oculta el enlace de atribucion "Indicadores Colombia" sin romper el widget */
+  #dolar_wpc_ticker > a {
+    display: none;
+  }
   .tv-zone {
     background: #6E101A;
   }
